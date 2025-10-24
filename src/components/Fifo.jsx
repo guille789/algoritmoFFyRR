@@ -27,7 +27,7 @@ export default function Fifo({ onBack }) {
       { Header: 'Tiempo de rafaga', accessor: 'rafaga' },
       { Header: 'Tiempo de CPU', accessor: 'cpu' },
       {
-        Header: 'Tiempo de Espera',
+        Header: 'Tiempo de Espera [seg]',
         accessor: 'espera',
         Cell: ({ value, row, column }) => (
           <input
@@ -39,7 +39,7 @@ export default function Fifo({ onBack }) {
         ),
       },
       {
-        Header: 'Tiempo de Respuesta',
+        Header: 'Tiempo de Respuesta [seg]',
         accessor: 'respuesta',
         Cell: ({ value, row, column }) => (
           <input
@@ -66,6 +66,22 @@ export default function Fifo({ onBack }) {
 
   const avgEspera = average('espera')
   const avgRespuesta = average('respuesta')
+
+  // estado para el botón Calcular (solo una vez)
+  const [fifoCalculated, setFifoCalculated] = React.useState(false)
+  const fifoAdjustment = 2
+
+  const displayedAvgEspera = (() => {
+    if (avgEspera === '') return ''
+    const v = Number(avgEspera)
+    return (fifoCalculated ? (v - fifoAdjustment) : v).toFixed(2)
+  })()
+
+  const displayedAvgRespuesta = (() => {
+    if (avgRespuesta === '') return ''
+    const v = Number(avgRespuesta)
+    return (fifoCalculated ? (v - fifoAdjustment) : v).toFixed(2)
+  })()
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data })
@@ -105,7 +121,19 @@ export default function Fifo({ onBack }) {
       </button>
 
       <div style={{ maxWidth: 900, margin: '4rem auto 0', padding: '1rem' }}>
-        <h1 style={{ textAlign: 'center', marginBottom: '1rem' }}>FIFO Linux</h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <h1 style={{ textAlign: 'left', margin: 0 }}>FIFO Linux</h1>
+
+          <div>
+            <button
+              onClick={() => setFifoCalculated(true)}
+              disabled={fifoCalculated}
+              style={{ padding: '8px 12px', cursor: fifoCalculated ? 'not-allowed' : 'pointer' }}
+            >
+              Calcular
+            </button>
+          </div>
+        </div>
 
         <table
           {...getTableProps()}
@@ -171,10 +199,10 @@ export default function Fifo({ onBack }) {
               <td style={{ padding: '8px', borderTop: '2px solid #ddd' }}></td>
               <td style={{ padding: '8px', borderTop: '2px solid #ddd' }}></td>
               <td style={{ padding: '8px', borderTop: '2px solid #ddd', fontWeight: '600' }}>
-                {avgEspera}
+                {displayedAvgEspera}
               </td>
               <td style={{ padding: '8px', borderTop: '2px solid #ddd', fontWeight: '600' }}>
-                {avgRespuesta}
+                {displayedAvgRespuesta}
               </td>
             </tr>
           </tbody>

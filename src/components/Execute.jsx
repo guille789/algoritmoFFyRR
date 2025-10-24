@@ -30,7 +30,7 @@ mientras que en el sistema operativo Microsoft Windows es de 5 segundos
 
 por lo tanto Google nos contrata
 
-y asi con el tiempo de respuesta en FIFO es 9,76 segundos y Microsoft Windows es 11,76 segundos`}
+y asi con el tiempo de respuesta en FIFO es 9,75 segundos y Microsoft Windows es 11,75 segundos`}
       </div>
     </div>
   )

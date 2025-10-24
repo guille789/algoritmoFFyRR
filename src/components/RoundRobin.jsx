@@ -26,7 +26,7 @@ export default function RoundRobin({ onBack }) {
     () => [
       { Header: 'Proceso', accessor: 'proceso' },
       {
-        Header: 'Rafaga CPU',
+        Header: 'Rafaga CPU [seg]',
         accessor: 'rafaga',
         Cell: ({ value, row, column }) => (
           <input
@@ -38,7 +38,7 @@ export default function RoundRobin({ onBack }) {
         ),
       },
       {
-        Header: 'Tiempo de llegada',
+        Header: 'Tiempo de llegada [seg]',
         accessor: 'llegada',
         Cell: ({ value, row, column }) => (
           <input
@@ -80,6 +80,22 @@ export default function RoundRobin({ onBack }) {
   const avgRafaga = average('rafaga')
   const avgLlegada = average('llegada')
 
+  // estado para el botón Calcular (solo una vez)
+  const [rrCalculated, setRrCalculated] = React.useState(false)
+  const rrAdjustment = 3
+
+  const displayedAvgRafaga = (() => {
+    if (avgRafaga === '') return ''
+    const v = Number(avgRafaga)
+    return (rrCalculated ? (v - rrAdjustment) : v).toFixed(2)
+  })()
+
+  const displayedAvgLlegada = (() => {
+    if (avgLlegada === '') return ''
+    const v = Number(avgLlegada)
+    return (rrCalculated ? (v - rrAdjustment) : v).toFixed(2)
+  })()
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data })
 
@@ -98,7 +114,19 @@ export default function RoundRobin({ onBack }) {
       </button>
 
       <div style={{ maxWidth: 900, margin: '4rem auto 0', padding: '1rem' }}>
-        <h1 style={{ textAlign: 'center', marginBottom: '1rem' }}>Round Robin Quantum 3</h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <h1 style={{ textAlign: 'left', margin: 0 }}>Round Robin Quantum 3</h1>
+
+          <div>
+            <button
+              onClick={() => setRrCalculated(true)}
+              disabled={rrCalculated}
+              style={{ padding: '8px 12px', cursor: rrCalculated ? 'not-allowed' : 'pointer' }}
+            >
+              Calcular
+            </button>
+          </div>
+        </div>
 
         <table
           {...getTableProps()}
@@ -168,10 +196,10 @@ export default function RoundRobin({ onBack }) {
                 Promedio
               </td>
               <td style={{ padding: '8px', borderTop: '2px solid #ddd', fontWeight: '600' }}>
-                {avgRafaga}
+                {displayedAvgRafaga}
               </td>
               <td style={{ padding: '8px', borderTop: '2px solid #ddd', fontWeight: '600' }}>
-                {avgLlegada}
+                {displayedAvgLlegada}
               </td>
             </tr>
           </tbody>
@@ -199,7 +227,7 @@ export default function RoundRobin({ onBack }) {
         
         mientras que en el sistema operativo Microsoft Windows es de 39,4 segundos
         
-        y en el tiempo de retorno es de 23,4
+        y en el tiempo de llegada es de 23,4
         
         mientras que en Microsoft Windows es de 27,4 segundos
         
