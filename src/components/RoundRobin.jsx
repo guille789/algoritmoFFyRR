@@ -117,7 +117,7 @@ export default function RoundRobin({ onBack }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
           <h1 style={{ textAlign: 'left', margin: 0 }}>Round Robin Quantum 3</h1>
 
-          <div>
+          <div style={{display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end'}}>
             <button
               onClick={() => setRrCalculated(true)}
               disabled={rrCalculated}
@@ -125,6 +125,15 @@ export default function RoundRobin({ onBack }) {
             >
               Calcular
             </button>
+
+            <a
+              href="https://youtu.be/C4Yt9Z4CVo4?si=tFoBvblxQ5ITMZ1k&t=66"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none' }}
+            >
+              <button style={{ padding: '8px 12px' }}>DemoQtum3</button>
+            </a>
           </div>
         </div>
 
